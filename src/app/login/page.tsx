@@ -31,11 +31,12 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { AlertDestructive } from "@/components/ui/alert-destructive";
 import { Button } from "@/components/ui/button";
+import GuestLayout from "../layouts/guest-layout";
 
 const loginFormSchema = LoginUserSchema;
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
-export default function LoginForm() {
+export default function LoginPage() {
   const router = useRouter();
   const [error, setMessage] = React.useState<string>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -78,78 +79,80 @@ export default function LoginForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={onSubmit}>
-        <Card className="min-w-[330px] max-w-md mx-auto">
-          <CardHeader>
-            <CardTitle className="font-bold text-xl">Sign In</CardTitle>
-            <CardDescription>
-              Enter your email below to login to your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {error && (
-              <div className="mb-3">
-                <AlertDestructive message={error} />
-              </div>
-            )}
-            <div className="grid w-full items-center gap-4">
-              <FormField
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="show_password"
-                  onCheckedChange={(e) => handleShowPassword(e as boolean)}
+    <GuestLayout>
+      <Form {...form}>
+        <form onSubmit={onSubmit}>
+          <Card className="min-w-[300px] max-w-[400px] mx-auto">
+            <CardHeader>
+              <CardTitle className="font-bold text-lg">Sign In</CardTitle>
+              <CardDescription>
+                Enter your email below to login to your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {error && (
+                <div className="mb-3">
+                  <AlertDestructive message={error} />
+                </div>
+              )}
+              <div className="grid w-full items-center gap-4">
+                <FormField
+                  control={control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <label
-                  htmlFor="show_password"
-                  className="text-sm medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Show password
-                </label>
+                <FormField
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="show_password"
+                    onCheckedChange={(e) => handleShowPassword(e as boolean)}
+                  />
+                  <label
+                    htmlFor="show_password"
+                    className="text-sm medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Show password
+                  </label>
+                </div>
               </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex-col">
-            <Button type="submit" className="w-full">
-              {isLoading ? "Submitting..." : "Login"}
-            </Button>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link className="underline underline-offset-4" href="/register">
-                Sign up
-              </Link>
-            </div>
-          </CardFooter>
-        </Card>
-      </form>
-    </Form>
+            </CardContent>
+            <CardFooter className="flex-col">
+              <Button type="submit" className="w-full">
+                {isLoading ? "Submitting..." : "Login"}
+              </Button>
+              <div className="mt-4 text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link className="underline underline-offset-4" href="/register">
+                  Sign up
+                </Link>
+              </div>
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
+    </GuestLayout>
   );
 }
