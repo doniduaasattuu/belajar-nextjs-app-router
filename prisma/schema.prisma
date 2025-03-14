@@ -9,6 +9,29 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  todolists Todolist[]
+
+  @@map("users")
+}
+
+model Todolist {
+  id        String   @id @default(uuid())
+  todo      String
+  status    Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, todo])
+  @@map("todolists")
 }
