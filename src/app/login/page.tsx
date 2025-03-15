@@ -31,7 +31,7 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { CustomAlert } from "@/components/ui/custom-alert";
 import { Button } from "@/components/ui/button";
-import GuestLayout from "../layouts/guest-layout";
+import GuestLayout from "../../layouts/guest-layout";
 
 const loginFormSchema = LoginUserSchema;
 type LoginFormSchema = z.infer<typeof loginFormSchema>;
@@ -41,14 +41,8 @@ export default function LoginPage() {
   const [error, setMessage] = React.useState<string>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  const sessionUser = sessionStorage.getItem("newUser");
-  const newUser = sessionUser ?? "";
-
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
-    defaultValues: {
-      email: newUser,
-    },
   });
 
   const { handleSubmit, control } = form;
@@ -72,8 +66,6 @@ export default function LoginPage() {
       router.push("/");
     } catch (e) {
       setMessage((e as Error).message);
-      setIsLoading(false);
-    } finally {
       setIsLoading(false);
     }
   });
@@ -101,14 +93,7 @@ export default function LoginPage() {
                   <CustomAlert message={error} variant="destructive" />
                 </div>
               )}
-              {!error && newUser && (
-                <div className="mb-3">
-                  <CustomAlert
-                    message="Your account created successfully"
-                    header="Success"
-                  />
-                </div>
-              )}
+
               <div className="grid w-full items-center gap-4">
                 <FormField
                   control={control}

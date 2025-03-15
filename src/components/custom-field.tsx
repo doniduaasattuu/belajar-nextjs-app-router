@@ -2,7 +2,6 @@ import { capitalizeFirstChar } from "@/lib/utils";
 import { FormItem } from "./ui/form";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { useState } from "react";
 
 type CustomFieldProps = {
   field: string;
@@ -16,18 +15,9 @@ export default function CustomField({
   error,
   type,
 }: CustomFieldProps) {
-  const [showError, setShowError] = useState<boolean>(true);
-
-  const handleHideError = () => {
-    setShowError(false);
-  };
-
   return (
     <FormItem>
-      <Label
-        className={error && showError ? "text-red-500" : ""}
-        htmlFor={field}
-      >
+      <Label className={error ? "text-red-500" : ""} htmlFor={field}>
         {capitalizeFirstChar(field)}
       </Label>
       <Input
@@ -35,11 +25,10 @@ export default function CustomField({
         type={type ?? "text"}
         name={field}
         defaultValue={defaultValue as string | undefined}
-        className={error && showError ? "border-red-500" : ""}
+        className={error ? "border-red-500" : ""}
         aria-describedby={`${field}-error`}
-        onFocus={handleHideError}
       />
-      {showError && error && (
+      {error && (
         <p
           id={`${field}-error`}
           className="text-sm text-red-500"

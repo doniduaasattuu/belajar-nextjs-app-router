@@ -10,12 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import GuestLayout from "../layouts/guest-layout";
+import GuestLayout from "../../layouts/guest-layout";
 import { Button } from "@/components/ui/button";
-import { createUser } from "../actions/user-action";
+import { createUser } from "../../actions/user-action";
 import CustomField from "@/components/custom-field";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { CustomAlert } from "@/components/ui/custom-alert";
 
 const initialState = {
   success: false,
@@ -26,15 +25,7 @@ const initialState = {
 };
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [state, formAction, pending] = useFormState(createUser, initialState);
-
-  useEffect(() => {
-    if (state.success && state.redirect?.email) {
-      sessionStorage.setItem("newUser", state.redirect.email);
-      router.push("/login");
-    }
-  }, [router, state.success, state.redirect]);
 
   return (
     <GuestLayout>
@@ -47,6 +38,12 @@ export default function RegisterPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {state.success && state.redirect && (
+              <div className="mb-3">
+                <CustomAlert header="Success" message={state.message} />
+              </div>
+            )}
+
             <div className="grid w-full items-center gap-4">
               <CustomField
                 defaultValue={state?.inputs?.email}

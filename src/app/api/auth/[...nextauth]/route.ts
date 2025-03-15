@@ -2,13 +2,15 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import type { Session } from "next-auth";
 
 const prisma = new PrismaClient();
+type SessionProps = { session: Session; token: JWT };
+type JWTProps = { token: JWT; user: User };
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -45,17 +47,17 @@ const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: JWTProps) {
       if (user) {
-        token.id = user.id as string;
+        token.sub = user.id as string;
         token.email = user.email;
         token.name = user.name;
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }: SessionProps) {
       if (session.user) {
-        session.user.id = (token.id as string) ?? (token.sub as string);
+        session.user.id = (token.sub as string) ?? (token.id as string);
         session.user.email = token.email;
         session.user.name = token.name;
       }
@@ -65,8 +67,12 @@ const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60 * 1, // max age 1 hour
   },
 };
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
+// export const { GET, POST } = NextAuth(authOptions);
+// export default NextAuth(authOptions);
+// export default handler;
