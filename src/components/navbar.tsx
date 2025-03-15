@@ -6,13 +6,16 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
-export default function Navbar() {
+export default function Navbar({ className }: { className: unknown }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="w-full p-3 bg-background shadow-md">
-      <div className="container mx-auto flex items-center justify-between">
+      <div
+        className={`${className} container mx-auto flex items-center justify-between`}
+      >
         <Link href="/" className="text-xl font-bold">
           TodoApp
         </Link>
@@ -36,6 +39,13 @@ export default function Navbar() {
           >
             Contact
           </Link>
+          <Button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            variant="link"
+            className="text-muted-foreground p-0 "
+          >
+            Sign out
+          </Button>
           <ModeToggle />
         </div>
 

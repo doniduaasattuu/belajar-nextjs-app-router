@@ -20,7 +20,7 @@ export const RegisterUserSchema = BaseUserSchema.pick({
   password: true,
 })
   .extend({
-    confirm: z.string().min(8),
+    confirm: z.string({ message: "Confirm password is required" }).min(8),
   })
   .refine((data) => data.password === data.confirm, {
     message: "Password don't match",

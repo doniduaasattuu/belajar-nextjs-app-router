@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useFormState } from "react-dom";
 import {
   Card,
   CardContent,
@@ -9,24 +9,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  FormControl,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import Link from "next/link";
 import GuestLayout from "../layouts/guest-layout";
 import { Button } from "@/components/ui/button";
 import { createUser } from "../actions/user-action";
+import CustomField from "@/components/custom-field";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const initialState = {
+  success: false,
   message: "",
+  errors: {},
+  inputs: {},
+  redirect: null,
 };
 
-export default function Register() {
-  const [state, formAction] = React.useActionState(createUser, initialState);
+export default function RegisterPage() {
+  const router = useRouter();
+  const [state, formAction, pending] = useFormState(createUser, initialState);
+
+  useEffect(() => {
+    if (state.success && state.redirect?.email) {
+      sessionStorage.setItem("newUser", state.redirect.email);
+      router.push("/login");
+    }
+  }, [router, state.success, state.redirect]);
 
   return (
     <GuestLayout>
@@ -40,39 +48,33 @@ export default function Register() {
           </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" name="email" required />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input type="text" name="name" required />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" name="password" required />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input type="password" name="confirm_password" required />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <CustomField
+                defaultValue={state?.inputs?.email}
+                error={state?.errors?.email}
+                field="email"
+              />
+              <CustomField
+                defaultValue={state?.inputs?.name}
+                error={state?.errors?.name}
+                field="name"
+              />
+              <CustomField
+                error={state?.errors?.password}
+                field="password"
+                type="password"
+              />
+              <CustomField
+                error={state?.errors?.confirm}
+                field="confirm"
+                type="password"
+              />
             </div>
           </CardContent>
           <CardFooter className="flex-col">
-            <Button className="w-full">Register</Button>
-            {state?.message && <p className="text-red-500">{state.message}</p>}
+            <Button className="w-full">
+              {pending ? "Processing..." : "Register"}
+            </Button>
+
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
               <Link className="underline underline-offset-4" href="/login">

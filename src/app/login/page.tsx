@@ -29,7 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserSchema } from "@/validation/user-validation";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { AlertDestructive } from "@/components/ui/alert-destructive";
+import { CustomAlert } from "@/components/ui/custom-alert";
 import { Button } from "@/components/ui/button";
 import GuestLayout from "../layouts/guest-layout";
 
@@ -41,8 +41,14 @@ export default function LoginPage() {
   const [error, setMessage] = React.useState<string>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
+  const sessionUser = sessionStorage.getItem("newUser");
+  const newUser = sessionUser ?? "";
+
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: newUser,
+    },
   });
 
   const { handleSubmit, control } = form;
@@ -92,7 +98,15 @@ export default function LoginPage() {
             <CardContent>
               {error && (
                 <div className="mb-3">
-                  <AlertDestructive message={error} />
+                  <CustomAlert message={error} variant="destructive" />
+                </div>
+              )}
+              {!error && newUser && (
+                <div className="mb-3">
+                  <CustomAlert
+                    message="Your account created successfully"
+                    header="Success"
+                  />
                 </div>
               )}
               <div className="grid w-full items-center gap-4">
@@ -141,7 +155,7 @@ export default function LoginPage() {
             </CardContent>
             <CardFooter className="flex-col">
               <Button type="submit" className="w-full">
-                {isLoading ? "Submitting..." : "Login"}
+                {isLoading ? "Processing..." : "Login"}
               </Button>
               <div className="mt-4 text-center text-sm">
                 Don&apos;t have an account?{" "}

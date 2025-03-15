@@ -45,21 +45,21 @@ const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async session({ session, token }: { session: Session; token: JWT }) {
-      if (session.user) {
-        session.user.id = token.sub as string; // Ensure token.sub is a string
-        session.user.email = token.email;
-        session.user.name = token.name;
-      }
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) {
-        token.sub = user.id;
+        token.id = user.id as string;
         token.email = user.email;
         token.name = user.name;
       }
       return token;
+    },
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (session.user) {
+        session.user.id = (token.id as string) ?? (token.sub as string);
+        session.user.email = token.email;
+        session.user.name = token.name;
+      }
+      return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
