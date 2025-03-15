@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import ModeToggle, { ModeDropdown } from "@/components/mode-toggle";
+import ModeToggle, { ModeSwitch } from "@/components/mode-toggle";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
@@ -16,6 +16,8 @@ import {
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { usePathname } from "next/navigation";
 import Navlink from "./nav-link";
+import { Separator } from "./ui/separator";
+import { Label } from "./ui/label";
 
 export default function Navbar({ className }: { className: unknown }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,11 +56,22 @@ export default function Navbar({ className }: { className: unknown }) {
           TodoApp
         </Link>
 
-        <div className="hidden md:flex space-x-6 items-center text-sm">
-          {routes.map((route: Route, index: number) => (
-            <Navlink key={index} pathname={pathname} route={route} />
-          ))}
-          <div className="flex items-center space-x-3">
+        <div className="hidden md:flex items-center space-x-4">
+          <div className="space-x-6 items-center text-sm">
+            {routes.map((route: Route, index: number) => (
+              <Navlink key={index} pathname={pathname} route={route} />
+            ))}
+          </div>
+          <div className="flex h-5 items-center space-x-4 text-sm">
+            <Separator orientation="vertical" />
+            <ModeSwitch />
+            <Label className="text-muted-foreground" htmlFor="darkmode">
+              Dark Mode
+            </Label>
+            <Separator orientation="vertical" />
+          </div>
+
+          <div className="flex items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer h-9 w-9">
@@ -69,7 +82,7 @@ export default function Navbar({ className }: { className: unknown }) {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <ModeDropdown />
+                {/* <ModeDropdown /> */}
                 <DropdownMenuItem onClick={handleLogout}>
                   Logout
                 </DropdownMenuItem>

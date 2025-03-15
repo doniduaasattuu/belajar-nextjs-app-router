@@ -6,13 +6,25 @@ import { revalidatePath } from "next/cache";
 
 type getAllTodosProps = {
   userId: string;
+  query?: string;
 };
 
 export async function getAllTodos({
   userId,
+  query,
 }: getAllTodosProps): Promise<Todo[] | null> {
+  console.log("Query in database: ", query);
+
   const todos = await prisma.todolist.findMany({
-    where: { userId: userId },
+    where: {
+      userId: userId,
+      ...(query && {
+        todo: {
+          contains: query,
+        },
+      }),
+    },
+
     select: {
       id: true,
       todo: true,

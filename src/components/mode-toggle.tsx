@@ -13,6 +13,8 @@ import {
   DropdownMenuSubTrigger,
 } from "./ui/dropdown-menu";
 import { Check } from "lucide-react";
+import { Switch } from "./ui/switch";
+import { useEffect, useState } from "react";
 
 export default function ModeToggle() {
   const { theme, setTheme } = useTheme();
@@ -56,5 +58,23 @@ export function ModeDropdown() {
         </DropdownMenuPortal>
       </DropdownMenuSub>
     </DropdownMenuGroup>
+  );
+}
+
+export function ModeSwitch() {
+  const { theme, setTheme } = useTheme();
+  const [isDark, setIsDark] = useState(false);
+
+  // Sync state when theme changes
+  useEffect(() => {
+    setIsDark(theme === "dark");
+  }, [theme]);
+
+  return (
+    <Switch
+      id="darkmode"
+      checked={isDark}
+      onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+    />
   );
 }
