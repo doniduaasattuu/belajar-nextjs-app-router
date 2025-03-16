@@ -48,13 +48,13 @@ export default function TodoActions({ todo }: TodoActionsProps) {
       toast.success("Success", {
         description: response.message,
       });
+
+      handleCloseDialog();
     } else {
       toast.error("Error", {
         description: response.message,
       });
     }
-
-    handleCloseDialog();
   };
 
   return (

@@ -45,6 +45,7 @@ export default function TodoEditDialog({
         toast.success("Success", {
           description: response.message,
         });
+        onOpenChange();
       } else {
         toast.error("Error", {
           description: response.message,
@@ -58,7 +59,6 @@ export default function TodoEditDialog({
     };
 
     update(data.todoId, data.text);
-    onOpenChange();
   };
 
   return (

@@ -3,6 +3,11 @@
 import prisma from "@/lib/prisma";
 import { Todo } from "../types/todo";
 import { revalidatePath } from "next/cache";
+import {
+  CreateTodoSchema,
+  UpdateStatusSchema,
+  UpdateTextSchema,
+} from "@/validation/todo-validation";
 
 type getAllTodosProps = {
   userId: string;
@@ -50,6 +55,18 @@ type TodoResponse = {
 
 export async function updateStatus({ todoId, status }: UpdateStatusProps) {
   try {
+    const validatedData = UpdateStatusSchema.safeParse({
+      id: todoId,
+      status: status,
+    });
+
+    if (!validatedData.success) {
+      return {
+        success: validatedData.success,
+        message: validatedData.error?.flatten().fieldErrors?.status?.[0],
+      } as TodoResponse;
+    }
+
     const isExists = await prisma.todolist.findUnique({
       where: {
         id: todoId,
@@ -97,6 +114,18 @@ type UpdateTodoTextProps = {
 
 export async function updateTodoText({ todoId, text }: UpdateTodoTextProps) {
   try {
+    const validatedData = UpdateTextSchema.safeParse({
+      id: todoId,
+      todo: text,
+    });
+
+    if (!validatedData.success) {
+      return {
+        success: validatedData.success,
+        message: validatedData.error?.flatten().fieldErrors?.todo?.[0],
+      } as TodoResponse;
+    }
+
     const isExists = await prisma.todolist.findUnique({
       where: {
         id: todoId,
@@ -145,6 +174,19 @@ type CreateTodoProps = {
 
 export async function createTodo({ userId, text, status }: CreateTodoProps) {
   try {
+    const validatedData = CreateTodoSchema.safeParse({
+      userId: userId,
+      todo: text,
+      status: status,
+    });
+
+    if (!validatedData.success) {
+      return {
+        success: validatedData.success,
+        message: validatedData.error?.flatten().fieldErrors?.todo?.[0],
+      } as TodoResponse;
+    }
+
     if (!userId) {
       return {
         success: false,

@@ -1,4 +1,4 @@
-import { z, ZodType } from "zod";
+import { z } from "zod";
 
 export const BaseUserSchema = z.object({
   email: z.coerce
@@ -33,6 +33,6 @@ export const LoginUserSchema = BaseUserSchema.pick({
 });
 
 export class UserValidation {
-  static readonly REGISTER: ZodType = RegisterUserSchema;
-  static readonly LOGIN: ZodType = LoginUserSchema;
+  static readonly REGISTER: z.ZodType = RegisterUserSchema;
+  static readonly LOGIN: z.ZodType = LoginUserSchema;
 }

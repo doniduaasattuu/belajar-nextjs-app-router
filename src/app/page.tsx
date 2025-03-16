@@ -27,7 +27,7 @@ export default async function HomePage({
 
   return (
     <AuthLayout>
-      <section className="space-y-8">
+      <section className="space-y-6">
         <TodoHeader />
 
         {todolists && todolists?.length >= 1 ? (
