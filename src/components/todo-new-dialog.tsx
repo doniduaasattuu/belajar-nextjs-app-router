@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { FormItem } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -21,12 +21,24 @@ type TodoDialogProps = {
   onOpenChange: () => void;
 };
 
+type SessionUser = { id: string } & {
+  name?: string | null | undefined;
+  email?: string | null | undefined;
+  image?: string | null | undefined;
+};
+
 export default function TodoNewDialog({
   isOpen,
   onOpenChange,
 }: TodoDialogProps) {
   const session = useSession();
-  const user = session?.data?.user;
+  const [user, setUser] = useState<SessionUser>();
+
+  useEffect(() => {
+    if (session.data?.user) {
+      setUser(session.data.user);
+    }
+  }, [session.data?.user]);
 
   const [todoText, setTodoText] = useState<string>("");
   const [status, setStatus] = useState<boolean>(false);

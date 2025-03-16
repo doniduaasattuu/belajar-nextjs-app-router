@@ -12,11 +12,13 @@ import {
 type getAllTodosProps = {
   userId: string;
   query?: string;
+  order?: string;
 };
 
 export async function getAllTodos({
   userId,
   query,
+  order,
 }: getAllTodosProps): Promise<Todo[] | null> {
   const todos = await prisma.todolist.findMany({
     where: {
@@ -27,11 +29,9 @@ export async function getAllTodos({
         },
       }),
     },
-
     orderBy: {
-      createdAt: "desc",
+      todo: (order as "asc" | "desc" | undefined) ?? "desc",
     },
-
     select: {
       id: true,
       todo: true,

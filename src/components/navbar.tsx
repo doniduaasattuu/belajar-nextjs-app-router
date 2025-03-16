@@ -43,7 +43,7 @@ export default function Navbar({ className }: { className: unknown }) {
   ];
 
   const handleLogout = () => {
-    signOut({ callbackUrl: "/login" });
+    signOut({ callbackUrl: `${pathname}/login` });
   };
 
   return (

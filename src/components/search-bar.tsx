@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "./ui/input";
 import { useDebouncedCallback } from "use-debounce";
 
-export default function SearchBar({}) {
+export default function SearchBar() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();

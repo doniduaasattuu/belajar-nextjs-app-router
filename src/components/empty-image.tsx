@@ -12,9 +12,7 @@ export default function EmptyImage({
     >
       <Image src="/empty.svg" alt="Empty" width={300} height={300} />
       <div className="text-center space-y-3">
-        <p className="text-sm text-muted-foreground">
-          It seems you don&apos;t have a list
-        </p>
+        <p className="text-sm text-muted-foreground">Empty</p>
       </div>
     </div>
   );

@@ -11,19 +11,18 @@ import TodoHeader from "@/components/todo-header";
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: { query: string };
+  searchParams: { query: string; order: string };
 }) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/login");
   }
-
-  const { query } = (await searchParams) || "";
-
   const user = session?.user;
   const userId: string = user.id;
-  const todolists: Todo[] | null = await getAllTodos({ userId, query });
+  const { query, order } = (await searchParams) ?? "";
+
+  const todolists: Todo[] | null = await getAllTodos({ userId, query, order });
 
   return (
     <AuthLayout>
