@@ -14,9 +14,7 @@ export default function Navlink({ route, pathname }: NavlinkProps) {
     <Link
       href={route.url}
       className={`${
-        route.url === pathname
-          ? "text-foreground font-semibold"
-          : "text-muted-foreground"
+        route.url === pathname ? "text-foreground" : "text-muted-foreground"
       } text-sm hover:text-foreground transition`}
     >
       {route.label}

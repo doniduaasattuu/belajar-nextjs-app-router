@@ -20,7 +20,7 @@ type TodoDialogProps = {
   onOpenChange: () => void;
 };
 
-export default function TodoDialog({
+export default function TodoEditDialog({
   todo,
   isOpen,
   onOpenChange,

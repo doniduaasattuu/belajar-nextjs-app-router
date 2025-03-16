@@ -13,8 +13,6 @@ export async function getAllTodos({
   userId,
   query,
 }: getAllTodosProps): Promise<Todo[] | null> {
-  console.log("Query in database: ", query);
-
   const todos = await prisma.todolist.findMany({
     where: {
       userId: userId,
@@ -23,6 +21,10 @@ export async function getAllTodos({
           contains: query,
         },
       }),
+    },
+
+    orderBy: {
+      createdAt: "desc",
     },
 
     select: {
@@ -41,7 +43,7 @@ type UpdateStatusProps = {
   status: boolean;
 };
 
-type UpdateTodoResponse = {
+type TodoResponse = {
   success: boolean;
   message: string;
 };
@@ -58,7 +60,7 @@ export async function updateStatus({ todoId, status }: UpdateStatusProps) {
       return {
         success: false,
         message: "Todo not found",
-      } as UpdateTodoResponse;
+      } as TodoResponse;
     }
 
     const todo: Todo = await prisma.todolist.update({
@@ -75,7 +77,7 @@ export async function updateStatus({ todoId, status }: UpdateStatusProps) {
     return {
       success: true,
       message: todo.status ? "Marked as completed" : "Marked as incompleted",
-    } as UpdateTodoResponse;
+    } as TodoResponse;
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -84,7 +86,7 @@ export async function updateStatus({ todoId, status }: UpdateStatusProps) {
     return {
       success: false,
       message: "Error updating todo",
-    } as UpdateTodoResponse;
+    } as TodoResponse;
   }
 }
 
@@ -105,7 +107,7 @@ export async function updateTodoText({ todoId, text }: UpdateTodoTextProps) {
       return {
         success: false,
         message: "Todo not found",
-      } as UpdateTodoResponse;
+      } as TodoResponse;
     }
 
     await prisma.todolist.update({
@@ -122,7 +124,7 @@ export async function updateTodoText({ todoId, text }: UpdateTodoTextProps) {
     return {
       success: true,
       message: "Todo updated successfully",
-    } as UpdateTodoResponse;
+    } as TodoResponse;
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -131,6 +133,100 @@ export async function updateTodoText({ todoId, text }: UpdateTodoTextProps) {
     return {
       success: false,
       message: "Error updating todo",
-    } as UpdateTodoResponse;
+    } as TodoResponse;
+  }
+}
+
+type CreateTodoProps = {
+  userId: string | undefined;
+  text: string;
+  status: boolean;
+};
+
+export async function createTodo({ userId, text, status }: CreateTodoProps) {
+  try {
+    if (!userId) {
+      return {
+        success: false,
+        message: "User id is required",
+      } as TodoResponse;
+    }
+
+    const isExists = await prisma.todolist.findFirst({
+      where: {
+        userId: userId,
+        todo: text,
+      },
+    });
+
+    if (isExists) {
+      return {
+        success: false,
+        message: "Todo cannot be duplicate",
+      } as TodoResponse;
+    }
+
+    await prisma.todolist.create({
+      data: {
+        userId: userId,
+        todo: text,
+        status: status,
+      },
+    });
+
+    revalidatePath("/");
+
+    return {
+      success: true,
+      message: "Successfully created",
+    } as TodoResponse;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+
+    return {
+      success: false,
+      message: "Error updating todo",
+    } as TodoResponse;
+  }
+}
+
+export async function deleteTodo({ todoId }: { todoId: string }) {
+  try {
+    const isExists = await prisma.todolist.findUnique({
+      where: {
+        id: todoId,
+      },
+    });
+
+    if (!isExists) {
+      return {
+        success: false,
+        message: "Todo not found",
+      } as TodoResponse;
+    }
+
+    await prisma.todolist.delete({
+      where: {
+        id: todoId,
+      },
+    });
+
+    revalidatePath("/");
+
+    return {
+      success: true,
+      message: "Deleted successfully",
+    } as TodoResponse;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+
+    return {
+      success: false,
+      message: "Error updating todo",
+    } as TodoResponse;
   }
 }

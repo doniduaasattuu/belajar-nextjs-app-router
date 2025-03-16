@@ -17,7 +17,6 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { usePathname } from "next/navigation";
 import Navlink from "./nav-link";
 import { Separator } from "./ui/separator";
-import { Label } from "./ui/label";
 
 export default function Navbar({ className }: { className: unknown }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,9 +64,6 @@ export default function Navbar({ className }: { className: unknown }) {
           <div className="flex h-5 items-center space-x-4 text-sm">
             <Separator orientation="vertical" />
             <ModeSwitch />
-            <Label className="text-muted-foreground" htmlFor="darkmode">
-              Dark Mode
-            </Label>
             <Separator orientation="vertical" />
           </div>
 
@@ -82,7 +78,6 @@ export default function Navbar({ className }: { className: unknown }) {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {/* <ModeDropdown /> */}
                 <DropdownMenuItem onClick={handleLogout}>
                   Logout
                 </DropdownMenuItem>

@@ -9,7 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Todo } from "@/types/todo";
-import TodoDialog from "./todo-dialog";
+import TodoEditDialog from "./todo-edit-dialog";
+import { deleteTodo } from "@/actions/todolist-action";
+import { toast } from "sonner";
+import { AlertDeleteDialog } from "./alert-delete-todo";
 
 type TodoActionsProps = {
   todo: Todo;
@@ -17,18 +20,43 @@ type TodoActionsProps = {
 
 export default function TodoActions({ todo }: TodoActionsProps) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isDialogDeleteShow, setIsDialogDeleteShow] = useState<boolean>(false);
+  const [selectedTodo, setSelectedTodo] = useState<string | null>("");
 
-  const handleEditTaskDialog = () => {
+  const handleEditDialog = () => {
     setIsEdit(true);
   };
 
   const handleCloseDialog = () => {
     setIsEdit(false);
+    setIsDialogDeleteShow(false);
+    setSelectedTodo(null);
   };
 
-  const handleDelete = (todoId: string) => {
-    console.log("Delete ", todoId);
+  const handleDeleteDialog = (todoId: string) => {
+    setSelectedTodo(todoId);
+    setIsDialogDeleteShow(true);
   };
+
+  const handleDelete = async () => {
+    if (!selectedTodo) return;
+
+    const todoId = selectedTodo;
+    const response = await deleteTodo({ todoId });
+
+    if (response.success) {
+      toast.success("Success", {
+        description: response.message,
+      });
+    } else {
+      toast.error("Error", {
+        description: response.message,
+      });
+    }
+
+    handleCloseDialog();
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -37,27 +65,30 @@ export default function TodoActions({ todo }: TodoActionsProps) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Action</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={handleEditTaskDialog}
-        >
+        <DropdownMenuItem className="cursor-pointer" onClick={handleEditDialog}>
           <Edit />
           Edit
         </DropdownMenuItem>
 
         <DropdownMenuItem
           className="cursor-pointer"
-          onClick={() => handleDelete(todo.id)}
+          onClick={() => handleDeleteDialog(todo.id)}
         >
           <Trash />
           Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
 
-      <TodoDialog
+      <TodoEditDialog
         todo={todo}
         isOpen={isEdit}
         onOpenChange={handleCloseDialog}
+      />
+
+      <AlertDeleteDialog
+        isOpen={isDialogDeleteShow}
+        onOpenChange={handleCloseDialog}
+        onDelete={handleDelete}
       />
     </DropdownMenu>
   );

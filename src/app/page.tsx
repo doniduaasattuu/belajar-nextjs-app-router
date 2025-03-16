@@ -5,10 +5,8 @@ import { Todo } from "../types/todo";
 import { redirect } from "next/navigation";
 import Todolists from "@/components/todolists";
 import { authOptions } from "./api/auth/[...nextauth]/route";
-import SearchBar from "@/components/search-bar";
-import { Button } from "@/components/ui/button";
-import { Plus, Settings2 } from "lucide-react";
 import EmptyImage from "@/components/empty-image";
+import TodoHeader from "@/components/todo-header";
 
 export default async function HomePage({
   searchParams,
@@ -30,19 +28,7 @@ export default async function HomePage({
   return (
     <AuthLayout>
       <section className="space-y-8">
-        <div className="flex justify-between items-center space-x-2">
-          <SearchBar />
-          <div className="space-x-2 flex items-center">
-            <Button className="cursor-pointer" variant="outline">
-              <Settings2 />
-            </Button>
-            <Button className="cursor-pointer" variant="outline">
-              <Plus />
-              New
-            </Button>
-          </div>
-        </div>
-        {/* <Todolists todolists={todolists} /> */}
+        <TodoHeader />
 
         {todolists && todolists?.length >= 1 ? (
           <Todolists todolists={todolists} />
