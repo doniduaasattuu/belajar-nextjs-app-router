@@ -43,6 +43,15 @@ export default function RegisterPage() {
                 <CustomAlert header="Success" message={state.message} />
               </div>
             )}
+            {!state.success && (
+              <div className="mb-3">
+                <CustomAlert
+                  variant="destructive"
+                  header="Success"
+                  message={state.message}
+                />
+              </div>
+            )}
 
             <div className="grid w-full items-center gap-4">
               <CustomField
