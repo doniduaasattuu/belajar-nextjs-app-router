@@ -1,7 +1,7 @@
 {
   "build": {
     "env": {
-      "DATABASE_URL": "file:./database.sqlite"
+      "DATABASE_URL": "file:/tmp/database.sqlite"
     }
   }
 }
