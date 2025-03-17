@@ -43,11 +43,12 @@ export default function RegisterPage() {
                 <CustomAlert header="Success" message={state.message} />
               </div>
             )}
-            {!state.success && (
+
+            {!state.success && !state.redirect && (
               <div className="mb-3">
                 <CustomAlert
                   variant="destructive"
-                  header="Success"
+                  header="Error"
                   message={state.message}
                 />
               </div>
