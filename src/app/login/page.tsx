@@ -63,7 +63,7 @@ export default function LoginPage() {
         throw new Error(res?.error);
       }
 
-      router.push("/");
+      router.push("/home");
     } catch (e) {
       setMessage((e as Error).message);
       setIsLoading(false);

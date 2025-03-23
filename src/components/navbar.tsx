@@ -30,7 +30,7 @@ export default function Navbar({ className }: { className: unknown }) {
   const routes: Route[] = [
     {
       label: "Home",
-      url: "/",
+      url: "/home",
     },
     {
       label: "About",
@@ -43,7 +43,7 @@ export default function Navbar({ className }: { className: unknown }) {
   ];
 
   const handleLogout = () => {
-    signOut({ callbackUrl: `${pathname}/login` });
+    signOut({ callbackUrl: "/login" });
   };
 
   return (
@@ -51,7 +51,7 @@ export default function Navbar({ className }: { className: unknown }) {
       <div
         className={`${className} container mx-auto flex items-center justify-between`}
       >
-        <Link href="/" className="text-xl font-bold">
+        <Link href="/home" className="text-xl font-bold">
           TodoApp
         </Link>
 

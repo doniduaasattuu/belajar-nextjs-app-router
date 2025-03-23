@@ -63,6 +63,13 @@ export async function createUser(prevState: unknown, formData: FormData) {
       };
     }
 
+    if (error instanceof Error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+
     return {
       success: false,
       message: "Something went wrong.",
