@@ -72,7 +72,7 @@ export async function createUser(prevState: unknown, formData: FormData) {
 
     return {
       success: false,
-      message: "Something went wrong.",
+      message: "Something went wrong",
     };
   }
 }

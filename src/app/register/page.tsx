@@ -44,6 +44,16 @@ export default function RegisterPage() {
               </div>
             )}
 
+            {!state.success && !state.redirect && (
+              <div className="mb-3">
+                <CustomAlert
+                  variant="destructive"
+                  header="Error"
+                  message={state.message}
+                />
+              </div>
+            )}
+
             <div className="grid w-full items-center gap-4">
               <CustomField
                 defaultValue={state?.inputs?.email}
