@@ -44,16 +44,6 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {!state.success && !state.redirect && (
-              <div className="mb-3">
-                <CustomAlert
-                  variant="destructive"
-                  header="Error"
-                  message={state.message}
-                />
-              </div>
-            )}
-
             <div className="grid w-full items-center gap-4">
               <CustomField
                 defaultValue={state?.inputs?.email}
@@ -78,7 +68,7 @@ export default function RegisterPage() {
             </div>
           </CardContent>
           <CardFooter className="flex-col">
-            <Button className="w-full">
+            <Button disabled={pending} className="w-full">
               {pending ? "Processing..." : "Register"}
             </Button>
 

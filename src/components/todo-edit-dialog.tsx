@@ -26,6 +26,7 @@ export default function TodoEditDialog({
   onOpenChange,
 }: TodoDialogProps) {
   const [todoText, setTodoText] = useState<string>("");
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   useEffect(() => {
     if (todo) {
@@ -38,6 +39,7 @@ export default function TodoEditDialog({
   };
 
   const onUpdateTodo = () => {
+    setIsUpdating(true);
     const update = async (todoId: string, text: string) => {
       const response = await updateTodoText({ todoId, text });
 
@@ -46,11 +48,14 @@ export default function TodoEditDialog({
           description: response.message,
         });
         onOpenChange();
+        setIsUpdating(false);
       } else {
         toast.error("Error", {
           description: response.message,
         });
       }
+
+      setIsUpdating(false);
     };
 
     const data = {
@@ -83,8 +88,12 @@ export default function TodoEditDialog({
           </FormItem>
         </div>
         <DialogFooter>
-          <Button className="cursor-pointer" onClick={onUpdateTodo}>
-            Update
+          <Button
+            disabled={isUpdating}
+            className="cursor-pointer"
+            onClick={onUpdateTodo}
+          >
+            {isUpdating ? "Loading.." : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>

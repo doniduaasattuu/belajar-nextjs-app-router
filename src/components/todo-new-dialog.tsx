@@ -33,6 +33,7 @@ export default function TodoNewDialog({
 }: TodoDialogProps) {
   const session = useSession();
   const [user, setUser] = useState<SessionUser>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (session.data?.user) {
@@ -52,6 +53,7 @@ export default function TodoNewDialog({
   };
 
   const onCreateTodo = () => {
+    setIsSubmitting(true);
     const create = async (
       userId: string | undefined,
       text: string,
@@ -71,6 +73,8 @@ export default function TodoNewDialog({
           description: response.message,
         });
       }
+
+      setIsSubmitting(false);
     };
 
     const data = {
@@ -116,8 +120,12 @@ export default function TodoNewDialog({
           </FormItem>
         </div>
         <DialogFooter>
-          <Button className="cursor-pointer" onClick={onCreateTodo}>
-            Submit
+          <Button
+            disabled={isSubmitting}
+            className="cursor-pointer"
+            onClick={onCreateTodo}
+          >
+            {isSubmitting ? "Loading.." : "Submit"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -26,11 +26,12 @@ export async function getAllTodos({
       ...(query && {
         todo: {
           contains: query,
+          mode: "insensitive",
         },
       }),
     },
     orderBy: {
-      todo: (order as "asc" | "desc" | undefined) ?? "desc",
+      createdAt: (order as "asc" | "desc" | undefined) ?? "desc",
     },
     select: {
       id: true,

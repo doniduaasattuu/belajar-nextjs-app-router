@@ -139,7 +139,7 @@ export default function LoginPage() {
               </div>
             </CardContent>
             <CardFooter className="flex-col">
-              <Button type="submit" className="w-full">
+              <Button disabled={isLoading} type="submit" className="w-full">
                 {isLoading ? "Processing..." : "Login"}
               </Button>
               <div className="mt-4 text-center text-sm">
